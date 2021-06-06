@@ -35,7 +35,6 @@ end
 #==============================================================================
 # ** Window_MenuStatus
 #==============================================================================
-
 class Window_MenuStatus < Window_Selectable
   #--------------------------------------------------------------------------
   # * Get Window Height
@@ -87,9 +86,23 @@ class Scene_ItemBase < Scene_MenuBase
     window.show.activate
   end
   def hide_sub_window(window)
-    @viewport.rect.width = Graphics.width
-    @viewport.rect.height = Graphics.height
     window.hide.deactivate
     activate_item_window
+  end
+end
+
+#==============================================================================
+# ** Scene_Item
+#==============================================================================
+class Scene_Item < Scene_ItemBase
+  def create_item_window
+    wy = @category_window.y + @category_window.height
+    wh = (Graphics.height - wy) - 120
+    @item_window = Window_ItemList.new(0, wy, Graphics.width, wh)
+    @item_window.viewport = @viewport
+    @item_window.help_window = @help_window
+    @item_window.set_handler(:ok,     method(:on_item_ok))
+    @item_window.set_handler(:cancel, method(:on_item_cancel))
+    @category_window.item_window = @item_window
   end
 end
